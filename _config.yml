@@ -7,7 +7,7 @@ description: >-
   Technical insights on high-performance computing, computational science,
   and performance optimization across scientific and AI/ML applications.
 baseurl: "" # e.g., /blog if hosted on subpath
-url: "https://calebyenusah.github.io" # full URL of your site
+url: "https://yencal.github.io" # full URL of your site
 twitter_username: CalebYenusah
 github_username: yencal
 
