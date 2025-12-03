@@ -13,7 +13,7 @@ Efficient global memory access is fundamental for memory-bound GPU kernels.
 In this post, I benchmark memcpy throughput using different data type widths, from 1 to 32 bytes, by running a templated CUDA kernel that reinterprets the source and destination buffers as wider vector types (`uint8_t`, `uint16_t`, `uint32_t`, `uint64_t`, `uint4`).
 
 The benchmark code and plotting scripts are available in this 
-<a href="https://github.com/yencal/gpu-bandwidth-benchmark.git" target="_blank">repository</a>.
+[repository](https://github.com/yencal/gpu-bandwidth-benchmark.git){:target="_blank" rel="noopener noreferrer"}.
 
 ### Methodology
 
@@ -123,3 +123,7 @@ With those constraints satisfied, wider data types offer clear benefits:
 * Better ability to saturate HBM bandwidth
 
 For memory-bound kernels, using 8-, or 16-byte, vector loads is often a simple and effective optimization.
+
+
+### References
+* [CUDA Pro Tip: Increase Performance with Vectorized Memory Access](https://developer.nvidia.com/blog/cuda-pro-tip-increase-performance-with-vectorized-memory-access/){:target="_blank" rel="noopener noreferrer"}
