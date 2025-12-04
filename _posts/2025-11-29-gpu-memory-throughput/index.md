@@ -74,15 +74,7 @@ The figure can be divided into three regions:
 
     Throughput rises rapidly here. The widest types show a spike that can exceed theoretical HBM bandwidth. 
     This happens because the working set fits partially or fully in L2 cache (H100 L2 = 50 MB).
-    Note that memcpy touches 2× the buffer size (one read + one write).
-
-    Thus:
-
-    * 20 MB buffer → 40 MB working set → still fits → unrealistically high bandwidth
-
-    * 30 MB buffer → 60 MB working set → no longer fits → sharp drop as the kernel falls back to HBM
-
-    In short: these peaks are cache effects and do not reflect true device memory throughput.
+    Therefore, these peaks are cache effects and do not reflect true device memory throughput.
 
 3. **HBM-dominated plateau region (≥10⁷–10⁸ bytes)**
 
