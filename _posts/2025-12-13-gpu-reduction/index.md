@@ -39,6 +39,8 @@ This hierarchy maps directly to GPU hardware: shuffle instructions operate withi
 The reduction is built from three device functions:
 
 **Thread-level accumulation:**
+
+Each thread accumulates values from global memory using a [grid-stride loop](https://developer.nvidia.com/blog/cuda-pro-tip-write-flexible-kernels-grid-stride-loops/){:target="_blank" rel="noopener noreferrer"}. This pattern ensures good load balancing and allows the kernel to handle arbitrary array sizes with a fixed grid configuration.
 ```cpp
 template<>
 __inline__ __device__
@@ -57,6 +59,8 @@ int ThreadAccumulate<int>(const int* __restrict__ input, int num_elements)
 ```
 
 **Warp-level reduction using shuffle:**
+
+After each thread has its partial sum, warps reduce their 32 values using `__shfl_down_sync`. This operates entirely in registers without memory access, making it extremely efficient.
 ```cpp
 __inline__ __device__
 int WarpReduce(int val)
@@ -72,6 +76,8 @@ int WarpReduce(int val)
 ```
 
 **Block-level reduction combining warp shuffle and shared memory:**
+
+Each warp produces one value via `WarpReduce`. These warp results are written to shared memory, then warp 0 performs a final reduction across all warp sums to produce the block's result. Since CUDA allows a maximum of 32 warps per block, a single warp is sufficient for this final step.
 ```cpp
 __inline__ __device__
 int BlockReduce(int val)
@@ -161,13 +167,11 @@ All three strategies achieve similar peak bandwidth for the same loading vector 
 
 For memory-bound reduction kernels:
 
-**Vectorization is critical.** Use 8- or 16-byte vector loads (int2, int4) when data alignment permits. This provides the largest performance gain.
+**Vectorization is critical.** Use 8- or 16-byte vector loads (int2, int4) when data alignment permits. This provides the largest performance gain across all array sizes.
 
-**Reduction strategy choice is secondary.** TwoPass, BlockAtomic, and WarpAtomic all achieve similar bandwidth once memory becomes the bottleneck. Choose based on code simplicity and kernel fusion opportunities rather than raw performance.
+**Reduction strategy choice matters.** While TwoPass, BlockAtomic, and WarpAtomic achieve similar peak bandwidth for the same vector width, BlockAtomic delivers the best overall performance across intermediate array sizes, followed by TwoPass. WarpAtomic adds atomic contention overhead that degrades performance until arrays are large enough to reach peak bandwidth.
 
-**Two-kernel approach (TwoPass) remains effective.** Despite requiring an additional launch, it matches single-kernel atomic variants in throughput and offers the clearest implementation.
-
-The hierarchical nature of GPU reduction—warp shuffle, block shared memory, grid global memory—efficiently maps to hardware and delivers bandwidth within 7-10% of theoretical peak for parallel reduction.
+The hierarchical nature of GPU reduction—warp shuffle, block shared memory, grid global memory—efficiently maps to hardware and delivers bandwidth within 5-10% of theoretical peak.
 
 ### References
 * [Optimizing Parallel Reduction in CUDA (Mark Harris)](https://developer.download.nvidia.com/assets/cuda/files/reduction.pdf){:target="_blank" rel="noopener noreferrer"}
