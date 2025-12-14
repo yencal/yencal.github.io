@@ -97,7 +97,7 @@ int BlockReduce(int val)
 }
 ```
 
-### Putting It All Together
+**Putting it all together:**
 
 These three device functions combine to form the reduction kernel:
 ```cpp
