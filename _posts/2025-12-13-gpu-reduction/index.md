@@ -97,6 +97,22 @@ int BlockReduce(int val)
 }
 ```
 
+### Putting It All Together
+
+These three device functions combine to form the reduction kernel:
+```cpp
+template<typename VecType>
+__global__
+void ReduceKernel(const int* __restrict__ input, int* __restrict__ output, int num_elements)
+{
+    int sum = ThreadAccumulate<VecType>(input, num_elements);
+    sum = BlockReduce(sum);
+    if (threadIdx.x == 0) output[blockIdx.x] = sum;
+}
+```
+
+Each thread accumulates values from global memory, threads within each block reduce to a single value, and block leaders write their results to global memory for the final reduction pass.
+
 ### Optimization Strategies
 
 **Vectorized Memory Access**
