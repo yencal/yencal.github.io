@@ -190,5 +190,6 @@ For memory-bound reduction kernels:
 The hierarchical nature of GPU reduction—warp shuffle, block shared memory, grid global memory—efficiently maps to hardware and delivers bandwidth within 5-10% of theoretical peak.
 
 ### References
+
 * [Optimizing Parallel Reduction in CUDA (Mark Harris)](https://developer.download.nvidia.com/assets/cuda/files/reduction.pdf){:target="_blank" rel="noopener noreferrer"}
 * [Faster Parallel Reductions on Kepler (NVIDIA)](https://developer.nvidia.com/blog/faster-parallel-reductions-kepler/){:target="_blank" rel="noopener noreferrer"}

@@ -118,4 +118,5 @@ For memory-bound kernels, using 8-, or 16-byte, vector loads is often a simple a
 
 
 ### References
+
 * [CUDA Pro Tip: Increase Performance with Vectorized Memory Access](https://developer.nvidia.com/blog/cuda-pro-tip-increase-performance-with-vectorized-memory-access/){:target="_blank" rel="noopener noreferrer"}
