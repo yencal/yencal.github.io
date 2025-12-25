@@ -212,12 +212,6 @@ Best Achieved: 2940.5 GB/s (87.7%)
 
 The optimization progression shows clear inflection points. Shared memory tiling provides a 2.1x improvement over naive (30% vs 14%). Adding padding for bank conflict avoidance delivers another 1.7x (50% vs 30%). Thread coarsening jumps to 83%, and larger tiles with vectorization reach the final 88%.
 
-**Thread coarsening** provides the dominant benefit in the 32×32 tile regime. All coarsening variants (with or without vectorization) cluster around 82-83% of peak bandwidth. This demonstrates that having each thread process multiple elements is critical on modern GPUs.
-
-**Larger tiles (64×64)** reduce per-tile overhead. The Vec2_T64 and Vec4_T64 variants achieve 87.7%, the best performance overall. Larger tiles amortize synchronization and indexing costs across more data.
-
-**Vectorization** matters but shows diminishing returns. Vec4 variants perform similarly to Vec2 variants with the same coarsening factor. The primary benefit comes from wide 128-byte transactions, but the unpacking/gathering overhead in shared memory limits the gain compared to pure coarsening.
-
 ### Conclusion
 
 Achieving near-optimal transpose performance requires combining multiple techniques:
