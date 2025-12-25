@@ -217,12 +217,12 @@ The optimization progression shows clear inflection points. Shared memory tiling
 Achieving near-optimal transpose performance requires combining multiple techniques:
 
 - **Shared memory tiling:** Stage data to enable coalesced reads and writes
-- **Bank conflict avoidance:** Add +1 padding to eliminate conflicts for scalar kernels. Note that vectorized kernels (Vec2/Vec4) still exhibit 2-way and 4-way bank conflicts respectively, even with padding. Swizzling patterns could eliminate these conflicts entirely and will be explored in a future post.
+- **Bank conflict avoidance:** Add +1 padding to eliminate conflicts for scalar kernels. Vectorized kernels (Vec2/Vec4) still exhibit 2-way and 4-way bank conflicts respectively.
 - **Thread coarsening:** Each thread processes multiple rows (dominant optimization)
 - **Vectorization:** Use float2/float4 for wide memory transactions
 - **Larger tiles:** 64×64 tiles reduce per-tile overhead
 
-The optimized transpose reaches 2940 GB/s on H100, achieving 87.7% of the 3.35 TB/s theoretical peak. The remaining bank conflicts in vectorized kernels suggest potential for further improvement with advanced swizzling techniques which will be explored in a future post.
+The optimized transpose reaches 2940 GB/s on H100, achieving 87.7% of the 3.35 TB/s theoretical peak.
 
 ### References
 
